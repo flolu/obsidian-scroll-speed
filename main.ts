@@ -1,17 +1,20 @@
-import {App, Plugin, PluginSettingTab, Setting} from 'obsidian'
+import {App, Plugin, PluginSettingTab, Setting, TextComponent} from 'obsidian'
+
+interface AugmentedWheelEvent extends WheelEvent {
+	path: Element[]
+}
 
 interface Settings {
 	speed: number
 }
 
+const DEFAULT_SPEED = 2
+
 const DEFAULT_SETTINGS: Settings = {
-	speed: 2,
+	speed: DEFAULT_SPEED,
 }
 
 const MOUSE_WHEEL_EVENT: any = 'mousewheel'
-const SOURCE_CLASS = 'markdown-source-view'
-const SOURCE_CODE_CLASS = 'CodeMirror-vscrollbar'
-const PREVIEW_CLASS = 'markdown-preview-view'
 
 export default class ScrollSpeed extends Plugin {
 	settings: Settings
@@ -20,40 +23,18 @@ export default class ScrollSpeed extends Plugin {
 		await this.loadSettings()
 		this.addSettingTab(new SettingsTab(this.app, this))
 
-		// TODO register listeners on application start
-
-		this.registerEvent(
-			this.app.workspace.on('active-leaf-change', event => {
-				const container = (event as any).containerEl as Element
-				const sourceContainer = this.getFirstElementByClass(container, SOURCE_CLASS)
-				const source = this.getFirstElementByClass(container, SOURCE_CODE_CLASS)
-				const preview = this.getFirstElementByClass(container, PREVIEW_CLASS)
-
-				// TODO remove event listeners when file is closed
-				this.registerListener(sourceContainer, source)
-				this.registerListener(preview)
-			})
-		)
+		window.addEventListener(MOUSE_WHEEL_EVENT, this.scrollListener.bind(this), {passive: false})
 	}
 
-	getFirstElementByClass(parent: Element, className: string) {
-		return parent.getElementsByClassName(className).item(0)
-	}
-
-	registerListener(listenElement: Element, scrollElement?: Element) {
-		listenElement.addEventListener(MOUSE_WHEEL_EVENT, (event: WheelEvent) => {
-			this.changeScrollSpeed(event, scrollElement || listenElement)
-		})
-	}
-
-	changeScrollSpeed(event: WheelEvent, element: Element) {
+	scrollListener(event: AugmentedWheelEvent) {
 		event.preventDefault()
-		const {deltaY} = event
-		const top = deltaY * this.settings.speed
-		element.scrollBy({top})
+		const firstScrollableElement = event.path.find(el => el.scrollHeight > el.clientHeight)
+		firstScrollableElement.scrollBy({top: event.deltaY * this.settings.speed})
 	}
 
-	onunload() {}
+	onunload() {
+		window.removeEventListener(MOUSE_WHEEL_EVENT, this.scrollListener)
+	}
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
@@ -73,21 +54,32 @@ class SettingsTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		let {containerEl} = this
-
+		const {containerEl} = this
 		containerEl.empty()
 
+		let input: TextComponent
+
 		new Setting(containerEl)
-			.setName('Speed')
-			.setDesc('Scroll speed multiplier')
-			.addText(text =>
-				text
-					.setPlaceholder('Normal speed is 1')
-					.setValue(this.plugin.settings.speed.toString())
-					.onChange(async value => {
-						this.plugin.settings.speed = Number(value)
+			.setName('Mouse Wheel Scroll Sensitivity')
+			.setDesc('A multiplier to be used on the `delta` of mouse wheel scroll events.')
+			.addExtraButton(button => {
+				button
+					.setIcon('reset')
+					.setTooltip('Restore default')
+					.onClick(async () => {
+						this.plugin.settings.speed = DEFAULT_SPEED
+						input.setValue(DEFAULT_SPEED.toString())
 						await this.plugin.saveSettings()
 					})
-			)
+			})
+			.addText(text => {
+				input = text
+				text.setPlaceholder(DEFAULT_SPEED.toString())
+					.setValue(this.plugin.settings.speed.toString())
+					.onChange(async value => {
+						this.plugin.settings.speed = Number(value) || DEFAULT_SPEED
+						await this.plugin.saveSettings()
+					})
+			})
 	}
 }
