@@ -1,0 +1,28 @@
+{
+	"name": "scroll-speed",
+	"version": "0.12.0",
+	"description": "This plugin allows you to change the scroll speed inside Obsidian notes.",
+	"main": "main.js",
+	"scripts": {
+		"dev": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs --sourcemap=inline --watch",
+		"build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^16.11.1",
+		"esbuild": "0.13.8",
+		"obsidian": "^0.12.17",
+		"prettier": "^2.4.1",
+		"tslib": "2.3.1",
+		"typescript": "4.4.4"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"bracketSpacing": false,
+		"semi": false,
+		"arrowParens": "avoid",
+		"printWidth": 100
+	}
+}
