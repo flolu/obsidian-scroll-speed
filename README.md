@@ -9,4 +9,5 @@
 
 # Credits
 
-<div>Icons made by <a href="https://www.flaticon.com/authors/darius-dan" title="Darius Dan">Darius Dan</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+- Scroll animation made by [Manuel Otto](https://github.com/Mwni) from [StackOverflow](https://stackoverflow.com/a/47206289/8586803)
+- Icons made by [Darius Dan](https://www.flaticon.com/authors/darius-dan) from [www.flaticon.com](https://www.flaticon.com)

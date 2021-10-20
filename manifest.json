@@ -1,10 +1,10 @@
 {
-	"id": "scroll-speed",
-	"name": "Scroll Speed",
-	"version": "0.0.1",
-	"minAppVersion": "0.12.0",
-	"description": "This plugin allows you to change the scroll speed inside Obsidian notes.",
-	"author": "Flo",
-	"authorUrl": "https://flolu.de",
-	"isDesktopOnly": false
+  "id": "scroll-speed",
+  "name": "Scroll Speed",
+  "version": "0.0.1",
+  "minAppVersion": "0.12.0",
+  "description": "This plugin allows you to change the scroll speed inside Obsidian notes.",
+  "author": "Flo",
+  "authorUrl": "https://flolu.de",
+  "isDesktopOnly": false
 }
