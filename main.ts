@@ -6,58 +6,71 @@ interface AugmentedWheelEvent extends WheelEvent {
 
 interface Settings {
   speed: number
+  altMultiplier: number
   smoothness: number
 }
 
-const DEFAULT_SPEED = 5
-const DEFAULT_SMOOTHNESS = 3
-
 const DEFAULT_SETTINGS: Settings = {
-  speed: DEFAULT_SPEED,
-  smoothness: DEFAULT_SMOOTHNESS,
+  speed: 5,
+  altMultiplier: 5,
+  smoothness: 3,
 }
-
-const MOUSE_WHEEL_EVENT: any = 'mousewheel'
 
 export default class ScrollSpeed extends Plugin {
   settings: Settings
 
-  position = 0
-  isMoving = false
-  target: Element
-
   async onload() {
     await this.loadSettings()
     this.addSettingTab(new SettingsTab(this.app, this))
-
-    window.addEventListener(MOUSE_WHEEL_EVENT, this.scrollListener.bind(this), {passive: false})
-  }
-
-  update() {
-    this.isMoving = true
-
-    const divider = Math.pow(this.settings.smoothness, 1.3)
-    const delta = (this.position - this.target.scrollTop) / divider
-    this.target.scrollTop += delta
-
-    if (Math.abs(delta) > 0.5) window.requestAnimationFrame(this.update.bind(this))
-    else this.isMoving = false
+    window.addEventListener('wheel', this.scrollListener.bind(this), {passive: false})
   }
 
   scrollListener(event: AugmentedWheelEvent) {
     event.preventDefault()
 
-    this.target = event.path.find(el => el.scrollHeight > el.clientHeight)
+    let {deltaX, deltaY} = event
 
-    this.position = this.target.scrollTop
-    const acceleration = Math.pow(this.settings.speed, 1.1)
-    this.position += event.deltaY * acceleration
+    if (event.shiftKey) {
+      deltaX = deltaX || deltaY
+      deltaY = 0
+    }
 
-    if (!this.isMoving) this.update()
+    if (event.altKey) {
+      deltaX *= this.settings.altMultiplier
+      deltaY *= this.settings.altMultiplier
+    }
+
+    const isHorizontal = deltaX && !deltaY
+
+    for (const element of event.path) {
+      if (this.isScrollable(element, isHorizontal)) {
+        // TODO scroll animation https://stackoverflow.com/a/47206289/8586803
+        element.scrollBy(deltaX * this.settings.speed, deltaY * this.settings.speed)
+        break
+      }
+    }
+  }
+
+  isScrollable(element: Element, horizontal: boolean) {
+    return (
+      this.isContentOverflowing(element, horizontal) && this.hasOverflowStyle(element, horizontal)
+    )
+  }
+
+  isContentOverflowing(element: Element, horizontal: boolean) {
+    const client = horizontal ? element.clientWidth : element.clientHeight
+    const scroll = horizontal ? element.scrollWidth : element.scrollHeight
+    return client < scroll
+  }
+
+  hasOverflowStyle(element: Element, horizontal: boolean) {
+    const style = getComputedStyle(element)
+    const overflow = style.getPropertyValue(horizontal ? 'overflow-x' : 'overflow-y')
+    return /^(scroll|auto)$/.test(overflow)
   }
 
   onunload() {
-    window.removeEventListener(MOUSE_WHEEL_EVENT, this.scrollListener)
+    window.removeEventListener('wheel', this.scrollListener)
   }
 
   async loadSettings() {
@@ -89,8 +102,8 @@ class SettingsTab extends PluginSettingTab {
           .setIcon('reset')
           .setTooltip('Restore default')
           .onClick(async () => {
-            this.plugin.settings.speed = DEFAULT_SPEED
-            speedSlider.setValue(DEFAULT_SPEED)
+            this.plugin.settings.speed = DEFAULT_SETTINGS.speed
+            speedSlider.setValue(DEFAULT_SETTINGS.speed)
             await this.plugin.saveSettings()
           })
       })
@@ -106,6 +119,31 @@ class SettingsTab extends PluginSettingTab {
           })
       })
 
+    let altMultiplierSlider: SliderComponent
+    new Setting(containerEl)
+      .setName('Alt Multiplier')
+      .addExtraButton(button => {
+        button
+          .setIcon('reset')
+          .setTooltip('Restore default')
+          .onClick(async () => {
+            this.plugin.settings.altMultiplier = DEFAULT_SETTINGS.altMultiplier
+            altMultiplierSlider.setValue(DEFAULT_SETTINGS.altMultiplier)
+            await this.plugin.saveSettings()
+          })
+      })
+      .addSlider(slider => {
+        altMultiplierSlider = slider
+        slider
+          .setValue(this.plugin.settings.altMultiplier)
+          .setLimits(1, 10, 1)
+          .setDynamicTooltip()
+          .onChange(async value => {
+            this.plugin.settings.altMultiplier = value
+            await this.plugin.saveSettings()
+          })
+      })
+
     let smoothnessSlider: SliderComponent
     new Setting(containerEl)
       .setName('Mouse Scroll Smoothness')
@@ -114,8 +152,8 @@ class SettingsTab extends PluginSettingTab {
           .setIcon('reset')
           .setTooltip('Restore default')
           .onClick(async () => {
-            this.plugin.settings.smoothness = DEFAULT_SMOOTHNESS
-            smoothnessSlider.setValue(DEFAULT_SMOOTHNESS)
+            this.plugin.settings.smoothness = DEFAULT_SETTINGS.smoothness
+            smoothnessSlider.setValue(DEFAULT_SETTINGS.smoothness)
             await this.plugin.saveSettings()
           })
       })
