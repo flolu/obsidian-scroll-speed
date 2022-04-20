@@ -97,6 +97,7 @@ class SettingsTab extends PluginSettingTab {
     let speedSlider: SliderComponent
     new Setting(containerEl)
       .setName('Mouse Scroll Speed')
+      .setDesc('1 is the default scroll speed, higher is faster')
       .addExtraButton(button => {
         button
           .setIcon('reset')
@@ -122,6 +123,7 @@ class SettingsTab extends PluginSettingTab {
     let altMultiplierSlider: SliderComponent
     new Setting(containerEl)
       .setName('Alt Multiplier')
+      .setDesc('Multiply scroll speed when the ALT key is pressed')
       .addExtraButton(button => {
         button
           .setIcon('reset')
@@ -144,29 +146,29 @@ class SettingsTab extends PluginSettingTab {
           })
       })
 
-    let smoothnessSlider: SliderComponent
-    new Setting(containerEl)
-      .setName('Mouse Scroll Smoothness')
-      .addExtraButton(button => {
-        button
-          .setIcon('reset')
-          .setTooltip('Restore default')
-          .onClick(async () => {
-            this.plugin.settings.smoothness = DEFAULT_SETTINGS.smoothness
-            smoothnessSlider.setValue(DEFAULT_SETTINGS.smoothness)
-            await this.plugin.saveSettings()
-          })
-      })
-      .addSlider(slider => {
-        smoothnessSlider = slider
-        slider
-          .setValue(this.plugin.settings.smoothness)
-          .setLimits(1, 10, 1)
-          .setDynamicTooltip()
-          .onChange(async value => {
-            this.plugin.settings.smoothness = value
-            await this.plugin.saveSettings()
-          })
-      })
+    // let smoothnessSlider: SliderComponent
+    // new Setting(containerEl)
+    //   .setName('Mouse Scroll Smoothness')
+    //   .addExtraButton(button => {
+    //     button
+    //       .setIcon('reset')
+    //       .setTooltip('Restore default')
+    //       .onClick(async () => {
+    //         this.plugin.settings.smoothness = DEFAULT_SETTINGS.smoothness
+    //         smoothnessSlider.setValue(DEFAULT_SETTINGS.smoothness)
+    //         await this.plugin.saveSettings()
+    //       })
+    //   })
+    //   .addSlider(slider => {
+    //     smoothnessSlider = slider
+    //     slider
+    //       .setValue(this.plugin.settings.smoothness)
+    //       .setLimits(1, 10, 1)
+    //       .setDynamicTooltip()
+    //       .onChange(async value => {
+    //         this.plugin.settings.smoothness = value
+    //         await this.plugin.saveSettings()
+    //       })
+    //   })
   }
 }
