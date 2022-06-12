@@ -40,7 +40,9 @@ export default class ScrollSpeed extends Plugin {
 
     const isHorizontal = deltaX && !deltaY
 
-    for (const element of event.path) {
+    // https://stackoverflow.com/a/39245638/8586803
+    const path = event.path || (event.composedPath && (event.composedPath() as Element[]))
+    for (const element of path) {
       if (this.isScrollable(element, isHorizontal)) {
         // TODO scroll animation https://stackoverflow.com/a/47206289/8586803
         element.scrollBy(deltaX * this.settings.speed, deltaY * this.settings.speed)
