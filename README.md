@@ -12,9 +12,6 @@
 **Scroll Speed**
 Change the mouse scroll sensitivity to your likings. 1 is super slow and 10 is very fast.
 
-**Scroll Smoothness**
-Configure how smooth the mouse scroll animation should be. 1 is no transition at all and 10 is butter smooth.
-
 # Installation
 
 1. Go to latest [releases](https://github.com/flolu/obsidian-scroll-speed/releases/latest)
