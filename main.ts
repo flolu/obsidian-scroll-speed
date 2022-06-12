@@ -7,13 +7,11 @@ interface AugmentedWheelEvent extends WheelEvent {
 interface Settings {
   speed: number
   altMultiplier: number
-  smoothness: number
 }
 
 const DEFAULT_SETTINGS: Settings = {
   speed: 5,
   altMultiplier: 5,
-  smoothness: 3,
 }
 
 export default class ScrollSpeed extends Plugin {
@@ -145,30 +143,5 @@ class SettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings()
           })
       })
-
-    // let smoothnessSlider: SliderComponent
-    // new Setting(containerEl)
-    //   .setName('Mouse Scroll Smoothness')
-    //   .addExtraButton(button => {
-    //     button
-    //       .setIcon('reset')
-    //       .setTooltip('Restore default')
-    //       .onClick(async () => {
-    //         this.plugin.settings.smoothness = DEFAULT_SETTINGS.smoothness
-    //         smoothnessSlider.setValue(DEFAULT_SETTINGS.smoothness)
-    //         await this.plugin.saveSettings()
-    //       })
-    //   })
-    //   .addSlider(slider => {
-    //     smoothnessSlider = slider
-    //     slider
-    //       .setValue(this.plugin.settings.smoothness)
-    //       .setLimits(1, 10, 1)
-    //       .setDynamicTooltip()
-    //       .onChange(async value => {
-    //         this.plugin.settings.smoothness = value
-    //         await this.plugin.saveSettings()
-    //       })
-    //   })
   }
 }
