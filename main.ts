@@ -22,10 +22,10 @@ export default class ScrollSpeed extends Plugin {
   async onload() {
     await this.loadSettings()
     this.addSettingTab(new SettingsTab(this.app, this))
-    window.addEventListener('wheel', this.scrollListener.bind(this), {passive: false})
+    window.addEventListener('wheel', this.scrollListener, {passive: false})
   }
 
-  scrollListener(event: AugmentedWheelEvent) {
+  scrollListener = (event: AugmentedWheelEvent) => {
     event.preventDefault()
 
     let {deltaX, deltaY} = event
