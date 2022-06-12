@@ -17,10 +17,11 @@ Configure how smooth the mouse scroll animation should be. 1 is no transition at
 
 # Installation
 
-1. Download repository
-2. Extract archive
-3. Move extracted folder into `.obsidian/plugins/` directory
-4. Restart Obsidian
+1. Go to latest [releases](https://github.com/flolu/obsidian-scroll-speed/releases/latest)
+2. Download `main.js` and `manifest.json`
+3. Create `.obsidian/plugins/scroll-speed` directory
+4. Move `main.js` and `manifest.json` into `.obsidian/plugins/scroll-speed`
+5. Restart Obsidian
 
 # Usage
 
