@@ -1,21 +1,39 @@
-import {App, Plugin, PluginSettingTab, Setting, SliderComponent, WorkspaceWindow} from 'obsidian'
+import {
+  App,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  SliderComponent,
+  ToggleComponent,
+  WorkspaceWindow,
+} from 'obsidian'
 
 interface AugmentedWheelEvent extends WheelEvent {
   path: Element[]
+  wheelDeltaY: number
+  wheelDeltaX: number
 }
 
 interface Settings {
   speed: number
   altMultiplier: number
+  enableAnimations: boolean
 }
 
 const DEFAULT_SETTINGS: Settings = {
   speed: 5,
   altMultiplier: 5,
+  enableAnimations: true,
 }
 
 export default class ScrollSpeed extends Plugin {
   settings: Settings
+
+  animationSmoothness = 3
+  positionY = 0
+  isMoving = false
+  target: Element | undefined
+  scrollDistance = 0
 
   async onload() {
     await this.loadSettings()
@@ -34,29 +52,77 @@ export default class ScrollSpeed extends Plugin {
   scrollListener = (event: AugmentedWheelEvent) => {
     event.preventDefault()
 
-    let {deltaX, deltaY} = event
+    if (this.isTrackPadUsed(event) || !this.settings.enableAnimations) {
+      this.scrollWithoutAnimation(event)
+    } else {
+      this.scrollWithAnimation(event)
+    }
+  }
 
-    if (event.shiftKey) {
-      deltaX = deltaX || deltaY
-      deltaY = 0
+  scrollWithoutAnimation(event: AugmentedWheelEvent) {
+    this.target = event.path.find(el => el.scrollHeight > el.clientHeight)
+
+    const acceleration = event.altKey
+      ? this.settings.speed * this.settings.altMultiplier
+      : this.settings.speed
+
+    this.target.scrollBy(event.deltaX * acceleration, event.deltaY * acceleration)
+  }
+
+  scrollWithAnimation(event: AugmentedWheelEvent) {
+    this.target = event.path.find(el => el.scrollHeight > el.clientHeight)
+
+    // TODO horizontal scrolling, too
+    this.positionY = this.target.scrollTop
+
+    const acceleration = event.altKey
+      ? Math.pow(this.settings.speed * this.settings.altMultiplier, 1.1)
+      : Math.pow(this.settings.speed, 1.1)
+
+    this.positionY += event.deltaY * acceleration
+    this.scrollDistance = event.deltaY * acceleration
+
+    if (!this.isMoving) {
+      this.isMoving = true
+
+      this.updateScrollAnimation()
+    }
+  }
+
+  updateScrollAnimation() {
+    if (!this.isMoving || !this.target) {
+      this.stopScrollAnimation()
     }
 
-    if (event.altKey) {
-      deltaX *= this.settings.altMultiplier
-      deltaY *= this.settings.altMultiplier
+    const divider = Math.pow(this.animationSmoothness, 1.3)
+    const delta = this.positionY - this.target.scrollTop
+    this.target.scrollTop += delta / divider
+
+    // Boundary at the top
+    if (delta < 0 && this.positionY < 0 && this.target.scrollTop === 0) {
+      return this.stopScrollAnimation()
     }
 
-    const isHorizontal = deltaX && !deltaY
-
-    // https://stackoverflow.com/a/39245638/8586803
-    const path = event.path || (event.composedPath && (event.composedPath() as Element[]))
-    for (const element of path) {
-      if (this.isScrollable(element, isHorizontal)) {
-        // TODO scroll animation https://stackoverflow.com/a/47206289/8586803
-        element.scrollBy(deltaX * this.settings.speed, deltaY * this.settings.speed)
-        break
-      }
+    // Boundary at the bottom
+    if (
+      delta > 0 &&
+      this.positionY > this.target.scrollHeight - this.target.clientHeight / 2 - this.scrollDistance
+    ) {
+      return this.stopScrollAnimation()
     }
+
+    // Stop when movement delta is approaching zero
+    if (Math.abs(delta) < this.scrollDistance * 0.015 || Math.abs(delta) < 1) {
+      return this.stopScrollAnimation()
+    }
+
+    window.requestAnimationFrame(this.updateScrollAnimation.bind(this))
+  }
+
+  stopScrollAnimation() {
+    this.isMoving = false
+    this.scrollDistance = 0
+    if (this.target) this.target = undefined
   }
 
   isScrollable(element: Element, horizontal: boolean) {
@@ -75,6 +141,21 @@ export default class ScrollSpeed extends Plugin {
     const style = getComputedStyle(element)
     const overflow = style.getPropertyValue(horizontal ? 'overflow-x' : 'overflow-y')
     return /^(scroll|auto)$/.test(overflow)
+  }
+
+  isTrackPadUsed(event: AugmentedWheelEvent) {
+    // https://stackoverflow.com/a/62415754/8586803
+
+    let isTrackPad = false
+    if (event.wheelDeltaY) {
+      if (event.wheelDeltaY === event.deltaY * -3) {
+        isTrackPad = true
+      }
+    } else if (event.deltaMode === 0) {
+      isTrackPad = true
+    }
+
+    return isTrackPad
   }
 
   async loadSettings() {
@@ -148,6 +229,28 @@ class SettingsTab extends PluginSettingTab {
             this.plugin.settings.altMultiplier = value
             await this.plugin.saveSettings()
           })
+      })
+
+    let animationToggle: ToggleComponent
+    new Setting(containerEl)
+      .setName('Enable Animation')
+      .setDesc('Toggle smooth scrolling animations')
+      .addExtraButton(button => {
+        button
+          .setIcon('reset')
+          .setTooltip('Restore default')
+          .onClick(async () => {
+            this.plugin.settings.enableAnimations = DEFAULT_SETTINGS.enableAnimations
+            animationToggle.setValue(DEFAULT_SETTINGS.enableAnimations)
+            await this.plugin.saveSettings()
+          })
+      })
+      .addToggle(toggle => {
+        animationToggle = toggle
+        toggle.setValue(this.plugin.settings.enableAnimations).onChange(async value => {
+          this.plugin.settings.enableAnimations = value
+          await this.plugin.saveSettings()
+        })
       })
   }
 }
