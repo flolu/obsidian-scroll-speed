@@ -34,6 +34,10 @@ Access the plugin settings from `Settings` -> `Plugins Options` -> `Scroll Speed
 3. Run `npm run dev` and make changes
 4. `CTRL+P` -> `Reload app without saving` to reload plugin in Obsidian
 
+# Release
+
+- [Releasing new releases](https://github.com/obsidianmd/obsidian-sample-plugin#releasing-new-releases)
+
 # Credits
 
 - Icons made by [Darius Dan](https://www.flaticon.com/authors/darius-dan) from [www.flaticon.com](https://www.flaticon.com)

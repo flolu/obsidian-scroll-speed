@@ -1,4 +1,4 @@
-import {App, Plugin, PluginSettingTab, Setting, SliderComponent} from 'obsidian'
+import {App, Plugin, PluginSettingTab, Setting, SliderComponent, WorkspaceWindow} from 'obsidian'
 
 interface AugmentedWheelEvent extends WheelEvent {
   path: Element[]
@@ -20,7 +20,15 @@ export default class ScrollSpeed extends Plugin {
   async onload() {
     await this.loadSettings()
     this.addSettingTab(new SettingsTab(this.app, this))
-    window.addEventListener('wheel', this.scrollListener, {passive: false})
+
+    this.registerDomEvent(window, 'wheel', this.scrollListener, {passive: false})
+
+    // @ts-ignore
+    this.registerEvent(this.app.on('window-open', this.windowOpenListener))
+  }
+
+  windowOpenListener = (_win: WorkspaceWindow, window: Window) => {
+    this.registerDomEvent(window, 'wheel', this.scrollListener, {passive: false})
   }
 
   scrollListener = (event: AugmentedWheelEvent) => {
@@ -67,10 +75,6 @@ export default class ScrollSpeed extends Plugin {
     const style = getComputedStyle(element)
     const overflow = style.getPropertyValue(horizontal ? 'overflow-x' : 'overflow-y')
     return /^(scroll|auto)$/.test(overflow)
-  }
-
-  onunload() {
-    window.removeEventListener('wheel', this.scrollListener)
   }
 
   async loadSettings() {

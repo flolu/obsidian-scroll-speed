@@ -2,33 +2,17 @@
 # yarn lockfile v1
 
 
-"@codemirror/rangeset@^0.19.5":
-  "integrity" "sha512-V8YUuOvK+ew87Xem+71nKcqu1SXd5QROMRLMS/ljT5/3MCxtgrRie1Cvild0G/Z2f1fpWxzX78V0U4jjXBorBQ=="
-  "resolved" "https://registry.npmjs.org/@codemirror/rangeset/-/rangeset-0.19.9.tgz"
-  "version" "0.19.9"
-  dependencies:
-    "@codemirror/state" "^0.19.0"
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.4":
+  "integrity" "sha512-g+3OJuRylV5qsXuuhrc6Cvs1NQluNioepYMM2fhnpYkNk7NgX+j0AFuevKSVKzTDmDyt9+Puju+zPdHNECzCNQ=="
+  "resolved" "https://registry.npmjs.org/@codemirror/state/-/state-6.1.4.tgz"
+  "version" "6.1.4"
 
-"@codemirror/state@^0.19.0", "@codemirror/state@^0.19.3", "@codemirror/state@^0.19.6":
-  "integrity" "sha512-psOzDolKTZkx4CgUqhBQ8T8gBc0xN5z4gzed109aF6x7D7umpDRoimacI/O6d9UGuyl4eYuDCZmDFr2Rq7aGOw=="
-  "resolved" "https://registry.npmjs.org/@codemirror/state/-/state-0.19.9.tgz"
-  "version" "0.19.9"
+"@codemirror/view@^6.0.0":
+  "integrity" "sha512-xBKP8N3AXOs06VcKvIuvIQoUlGs7Hb78ftJWahLaRX909jKPMgGxR5XjvrawzTTZMSTU3DzdjDNPwG6fPM/ypQ=="
+  "resolved" "https://registry.npmjs.org/@codemirror/view/-/view-6.5.1.tgz"
+  "version" "6.5.1"
   dependencies:
-    "@codemirror/text" "^0.19.0"
-
-"@codemirror/text@^0.19.0":
-  "integrity" "sha512-T9jnREMIygx+TPC1bOuepz18maGq/92q2a+n4qTqObKwvNMg+8cMTslb8yxeEDEq7S3kpgGWxgO1UWbQRij0dA=="
-  "resolved" "https://registry.npmjs.org/@codemirror/text/-/text-0.19.6.tgz"
-  "version" "0.19.6"
-
-"@codemirror/view@^0.19.31":
-  "integrity" "sha512-0eg7D2Nz4S8/caetCTz61rK0tkHI17V/d15Jy0kLOT8dTLGGNJUponDnW28h2B6bERmPlVHKh8MJIr5OCp1nGw=="
-  "resolved" "https://registry.npmjs.org/@codemirror/view/-/view-0.19.48.tgz"
-  "version" "0.19.48"
-  dependencies:
-    "@codemirror/rangeset" "^0.19.5"
-    "@codemirror/state" "^0.19.3"
-    "@codemirror/text" "^0.19.0"
+    "@codemirror/state" "^6.1.4"
     "style-mod" "^4.0.0"
     "w3c-keyname" "^2.2.4"
 
@@ -40,14 +24,14 @@
     "@types/tern" "*"
 
 "@types/estree@*":
-  "integrity" "sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw=="
-  "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.50.tgz"
-  "version" "0.0.50"
+  "integrity" "sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ=="
+  "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.0.tgz"
+  "version" "1.0.0"
 
 "@types/node@^16.11.1":
-  "integrity" "sha512-PYGcJHL9mwl1Ek3PLiYgyEKtwTMmkMw4vbiyz/ps3pfdRYLVv+SN7qHVAImrjdAXxgluDEw6Ph4lyv+m9UpRmA=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.11.1.tgz"
-  "version" "16.11.1"
+  "integrity" "sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-16.18.3.tgz"
+  "version" "16.18.3"
 
 "@types/tern@*":
   "integrity" "sha512-JAUw1iXGO1qaWwEOzxTKJZ/5JxVeON9kvGZ/osgZaJImBnyjyn0cjovPsf6FNLmyGY8Vw9DoXZCMlfMkMwHRWg=="
@@ -84,25 +68,23 @@
     "esbuild-windows-64" "0.13.8"
     "esbuild-windows-arm64" "0.13.8"
 
-"moment@2.29.2":
-  "integrity" "sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg=="
-  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.2.tgz"
-  "version" "2.29.2"
+"moment@2.29.4":
+  "integrity" "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
+  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  "version" "2.29.4"
 
-"obsidian@^0.14.6":
-  "integrity" "sha512-oXPJ8Zt10WhN19bk5l4mZuXRZbbdT1QoMgxGGJ0bB7UcJa0bozDzugS5L/QiV9gDoujpUPxDWNVahEel6r0Fpw=="
-  "resolved" "https://registry.npmjs.org/obsidian/-/obsidian-0.14.6.tgz"
-  "version" "0.14.6"
+"obsidian@^0.16.3":
+  "integrity" "sha512-hal9qk1A0GMhHSeLr2/+o3OpLmImiP+Y+sx2ewP13ds76KXsziG96n+IPFT0mSkup1zSwhEu+DeRhmbcyCCXWw=="
+  "resolved" "https://registry.npmjs.org/obsidian/-/obsidian-0.16.3.tgz"
+  "version" "0.16.3"
   dependencies:
-    "@codemirror/state" "^0.19.6"
-    "@codemirror/view" "^0.19.31"
     "@types/codemirror" "0.0.108"
-    "moment" "2.29.2"
+    "moment" "2.29.4"
 
 "prettier@^2.4.1":
-  "integrity" "sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA=="
-  "resolved" "https://registry.npmjs.org/prettier/-/prettier-2.4.1.tgz"
-  "version" "2.4.1"
+  "integrity" "sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g=="
+  "resolved" "https://registry.npmjs.org/prettier/-/prettier-2.7.1.tgz"
+  "version" "2.7.1"
 
 "style-mod@^4.0.0":
   "integrity" "sha512-OPhtyEjyyN9x3nhPsu76f52yUGXiZcgvsrFVtvTkyGRQJ0XK+GPc6ov1z+lRpbeabka+MYEQxOYRnt5nF30aMw=="
@@ -120,6 +102,6 @@
   "version" "4.4.4"
 
 "w3c-keyname@^2.2.4":
-  "integrity" "sha512-tOhfEwEzFLJzf6d1ZPkYfGj+FWhIpBux9ppoP3rlclw3Z0BZv3N7b7030Z1kYth+6rDuAsXUFr+d0VE6Ed1ikw=="
-  "resolved" "https://registry.npmjs.org/w3c-keyname/-/w3c-keyname-2.2.4.tgz"
-  "version" "2.2.4"
+  "integrity" "sha512-f+fciywl1SJEniZHD6H+kUO8gOnwIr7f4ijKA6+ZvJFjeGi1r4PDLl53Ayud9O/rk64RqgoQine0feoeOU0kXg=="
+  "resolved" "https://registry.npmjs.org/w3c-keyname/-/w3c-keyname-2.2.6.tgz"
+  "version" "2.2.6"
