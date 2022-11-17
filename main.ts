@@ -52,6 +52,8 @@ export default class ScrollSpeed extends Plugin {
   scrollListener = (event: AugmentedWheelEvent) => {
     event.preventDefault()
 
+    // TODO scrolling doesn't work when hovering over a tooltip
+
     if (this.isTrackPadUsed(event) || !this.settings.enableAnimations) {
       this.scrollWithoutAnimation(event)
     } else {
