@@ -52,18 +52,25 @@ export default class ScrollSpeed extends Plugin {
   scrollListener = (event: AugmentedWheelEvent) => {
     event.preventDefault()
 
-    // TODO scrolling doesn't work when hovering over a tooltip
+    // https://stackoverflow.com/a/39245638/8586803
+    const path = event.path || (event.composedPath && (event.composedPath() as Element[]))
 
-    if (this.isTrackPadUsed(event) || !this.settings.enableAnimations) {
-      this.scrollWithoutAnimation(event)
-    } else {
-      this.scrollWithAnimation(event)
+    for (const element of path) {
+      if (this.isScrollable(element, event)) {
+        this.target = element
+
+        if (this.isTrackPadUsed(event) || !this.settings.enableAnimations) {
+          this.scrollWithoutAnimation(event)
+        } else {
+          this.scrollWithAnimation(event)
+        }
+
+        break
+      }
     }
   }
 
   scrollWithoutAnimation(event: AugmentedWheelEvent) {
-    this.target = event.path.find(el => el.scrollHeight > el.clientHeight)
-
     const acceleration = event.altKey
       ? this.settings.speed * this.settings.altMultiplier
       : this.settings.speed
@@ -72,8 +79,6 @@ export default class ScrollSpeed extends Plugin {
   }
 
   scrollWithAnimation(event: AugmentedWheelEvent) {
-    this.target = event.path.find(el => el.scrollHeight > el.clientHeight)
-
     // TODO horizontal scrolling, too
     this.positionY = this.target.scrollTop
 
@@ -127,9 +132,12 @@ export default class ScrollSpeed extends Plugin {
     if (this.target) this.target = undefined
   }
 
-  isScrollable(element: Element, horizontal: boolean) {
+  isScrollable(element: Element, event: AugmentedWheelEvent) {
+    const isHorizontal = event.deltaX && !event.deltaY
+
     return (
-      this.isContentOverflowing(element, horizontal) && this.hasOverflowStyle(element, horizontal)
+      this.isContentOverflowing(element, isHorizontal) &&
+      this.hasOverflowStyle(element, isHorizontal)
     )
   }
 
