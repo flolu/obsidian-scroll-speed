@@ -80,7 +80,9 @@ export default class ScrollSpeed extends Plugin {
 
   scrollWithAnimation(event: AugmentedWheelEvent) {
     // TODO horizontal scrolling, too
-    this.positionY = this.target.scrollTop
+    if (!this.isMoving) {
+      this.positionY = this.target.scrollTop
+    }
 
     const acceleration = event.altKey
       ? Math.pow(this.settings.speed * this.settings.altMultiplier, 1.1)
@@ -88,6 +90,7 @@ export default class ScrollSpeed extends Plugin {
 
     this.positionY += event.deltaY * acceleration
     this.scrollDistance = event.deltaY * acceleration
+    this.positionY = Math.max(0, Math.min(this.positionY, this.target.scrollHeight - this.target.clientHeight))
 
     if (!this.isMoving) {
       this.isMoving = true
@@ -98,7 +101,7 @@ export default class ScrollSpeed extends Plugin {
 
   updateScrollAnimation() {
     if (!this.isMoving || !this.target) {
-      this.stopScrollAnimation()
+      return this.stopScrollAnimation()
     }
 
     const divider = Math.pow(this.animationSmoothness, 1.3)
@@ -119,7 +122,7 @@ export default class ScrollSpeed extends Plugin {
     }
 
     // Stop when movement delta is approaching zero
-    if (Math.abs(delta) < this.scrollDistance * 0.015 || Math.abs(delta) < 1) {
+    if (Math.abs(delta) < this.scrollDistance * 0.015 || Math.abs(delta / divider) < 1) {
       return this.stopScrollAnimation()
     }
 
@@ -129,6 +132,7 @@ export default class ScrollSpeed extends Plugin {
   stopScrollAnimation() {
     this.isMoving = false
     this.scrollDistance = 0
+    this.positionY = this.target.scrollTop
     if (this.target) this.target = undefined
   }
 
