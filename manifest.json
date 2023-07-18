@@ -1,7 +1,7 @@
 {
   "id": "scroll-speed",
   "name": "Scroll Speed",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "minAppVersion": "1.0.3",
   "description": "This plugin allows you to change the scroll speed inside Obsidian notes.",
   "author": "Florian Ludewig",
