@@ -211,7 +211,7 @@ class SettingsTab extends PluginSettingTab {
         speedSlider = slider
         slider
           .setValue(this.plugin.settings.speed)
-          .setLimits(1, 10, 1)
+          .setLimits(0.1, 10, 0.1)
           .setDynamicTooltip()
           .onChange(async value => {
             this.plugin.settings.speed = value
@@ -237,7 +237,7 @@ class SettingsTab extends PluginSettingTab {
         altMultiplierSlider = slider
         slider
           .setValue(this.plugin.settings.altMultiplier)
-          .setLimits(1, 10, 1)
+          .setLimits(0.1, 10, 0.1)
           .setDynamicTooltip()
           .onChange(async value => {
             this.plugin.settings.altMultiplier = value
