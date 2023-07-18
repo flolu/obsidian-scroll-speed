@@ -36,7 +36,13 @@ Access the plugin settings from `Settings` -> `Plugins Options` -> `Scroll Speed
 
 # Release
 
-- [Releasing new releases](https://github.com/obsidianmd/obsidian-sample-plugin#releasing-new-releases)
+- Update `manifest.json` with new version
+- Update `versions.json` with new version
+- Push changes to GitHub
+- `git tag X.X.X` (Tag current commit with new version)
+- `git push --tags` (Push tags to GitHub)
+- Add updated `manifest.json` and `main.js` as binary attachments to the GitHub release
+- [Read more here](https://github.com/obsidianmd/obsidian-sample-plugin#releasing-new-releases)
 
 # Credits
 
